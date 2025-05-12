@@ -76,6 +76,14 @@ class Game:
     def get_num_players(self):
         return len(self.players)
 
+    def reset_game(self):
+        self.to_go = 0 
+        self.pass_count = 0 
+        for player in self.players:
+            player.hand.clear_tileset()
+        self.pile = TileSet(list(TileSet.look_up.keys())) 
+        self.board = Board() 
+
     def set_up_hands(self): 
         """set up the hands """
         for i in range(TILES_IN_STARTING_HAND):
@@ -151,7 +159,7 @@ class Game:
                 raise IllegalMove(f"Encounterd a pass with legal moves.") 
             self.pass_move()
 
-        return move_code,ind 
+        return move_code,ind,orientation 
 
     def add_tile_to_board(self,ind,orientation):
         self.board.add_tile(ind,orientation)
@@ -164,7 +172,7 @@ class Game:
             If there are no tiles, return None.            
         """
         ind = random.choice(self.pile.get_list())
-        print(f" --- drew tile {ind}")
+        # print(f" --- drew tile {ind}")
         self.pile.remove_domino(ind)
         self.players[self.to_go].hand.add_domino(ind)
 
@@ -189,22 +197,25 @@ class Game:
 
         return True
 
-    def play_game(self):
+    def play_game(self, verbose=False):
         """ Play a full game. """
         self.set_up_hands()
         doub = self.zeroth_move()
-        print(f"Found double. {doub} or {TileSet.look_up.get(doub)} was played.")
+        # print(f"Found double. {doub} or {TileSet.look_up.get(doub)} was played.")
 
         move_count = 0 
-        while self.game_continues() and move_count < 100:
+        while self.game_continues():
             curr_player_id = self.to_go + 0 
-            move_code, ind = self.next_move()
-            s = f"({move_count:3d}) Player id:{curr_player_id} made move {move_code}"
-            if ind:
-                s += f" with ind: {ind}, i.e. ({TileSet.look_up.get(ind)})"
-            s += "."
-            print(s)
-            self.print_current_status() 
+            move_code, ind, orien = self.next_move()
+
+            # output current status
+            if verbose:
+                s = f"({move_count:3d}) Player id:{curr_player_id} made move {move_code}"
+                if ind:
+                    s += f" with ind: {ind}, i.e. ({TileSet.look_up.get(ind)}) of orientation: {orien}"
+                s += "."
+                print(s)
+                self.print_current_status() 
 
             move_count += 1
 
@@ -221,6 +232,12 @@ class Game:
             print(f"    P{i:d} Tiles: {player.hand.get_list_of_tiles()}")
             print(f"    P{i:d} Tile Count: {player.hand.get_count()}")
 
+    def who_won(self):
+        for ind,count in enumerate(self.player_hand_count()):
+            if count == 0:
+                return ind 
+  
+        return None
 
 class Match:
     """the full match object"""
@@ -231,4 +248,11 @@ class Match:
 
     def play_match(self):
         """ play a full match to WIN_SCORE"""
-        pass 
+
+        # while loop of player scores < TO_WIN
+
+        #   self.game.play_game()
+        #   calculate the score change 
+
+        # return the winner 
+

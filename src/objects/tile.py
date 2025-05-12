@@ -40,6 +40,9 @@ class TileSet:
                 raise TypeError(f"{ind} is not valid for dominos of max number {N}")
         self.inds = set(inds)
 
+    def clear_tileset(self):
+        self.inds = set() 
+
     def __str__(self):
         return "inds with inds: " + str(self.inds)
 

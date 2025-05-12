@@ -45,8 +45,8 @@ class Player:
         " Basic select move if can, draw, or pass in that order."
         can_draw, legal_tile_moves = self.legal_moves(game_state)
 
-        print("Player checking legal moves...")
-        print(can_draw, legal_tile_moves)
+        # print("Player checking legal moves...")
+        # print(can_draw, legal_tile_moves)
 
         if len(legal_tile_moves) > 0:
             ind, orientation = legal_tile_moves[0]
