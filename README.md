@@ -1,2 +1,9 @@
 # Dominos
-Play a game of dominos
+
+Play and train an engine to play Dominos. 
+
+# Data structure
+
+
+
+
